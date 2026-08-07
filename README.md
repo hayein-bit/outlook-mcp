@@ -279,6 +279,13 @@ claude mcp get outlook-mcp   # 등록된 command/env 상세 확인
 | `list_folders` | 받은 편지함 하위 폴더 트리와 메일/안읽음 수 조회 (디버깅용 보조 도구) |
 | `learn_reply_style` | 보낸 편지함에서 실제 작성한 메일을 모아옵니다. AI가 이를 분석해 `reply_style.md` 초안을 작성하는 데 사용 (초기 설정용) |
 
+### 사용 흐름 예시: 초기 설정 시 "내 메일 문체 학습해서 답장 스타일 만들어줘"
+
+1. AI가 `learn_reply_style({ maxCount: 40 })`을 호출해 보낸 편지함에서 실제 작성한 메일을 가져옵니다.
+2. 인사말/맺음말/서명/톤 패턴과 자주 쓰는 답장 유형을 분석합니다.
+3. 분석 결과를 바탕으로 `config/reply_style.md`를 새로 작성합니다.
+4. 이후 `create_reply`/`save_draft` 는 이 파일을 참고해 사용자의 실제 문체로 답장을 작성합니다.
+
 ### 사용 흐름 예시: "메일 정리해"
 
 1. 사용자: "오늘 온 메일 정리해줘"
@@ -301,13 +308,6 @@ claude mcp get outlook-mcp   # 등록된 command/env 상세 확인
 4. 나머지 내용을 이어서 작성한 뒤, `save_draft({ mode: "update", draftEntryId, bodyHtml })`를
    호출해 새 초안을 만들지 않고 같은 초안에 덮어씁니다.
 5. 사용자가 Outlook 임시보관함에서 검토한 후 직접 발송합니다.
-
-### 사용 흐름 예시: 초기 설정 시 "내 메일 문체 학습해서 답장 스타일 만들어줘"
-
-1. AI가 `learn_reply_style({ maxCount: 40 })`을 호출해 보낸 편지함에서 실제 작성한 메일을 가져옵니다.
-2. 인사말/맺음말/서명/톤 패턴과 자주 쓰는 답장 유형을 분석합니다.
-3. 분석 결과를 바탕으로 `config/reply_style.md`를 새로 작성합니다.
-4. 이후 `create_reply`/`save_draft` 는 이 파일을 참고해 사용자의 실제 문체로 답장을 작성합니다.
 
 ## 프로젝트 구조
 
@@ -657,6 +657,14 @@ comes back, the connection is working.
 | `list_folders` | Lists the inbox's folder tree with mail/unread counts (debugging helper). |
 | `learn_reply_style` | Gathers mail actually sent by the user, for the AI to analyze and draft `reply_style.md` from (used during initial setup). |
 
+#### Example flow: initial setup, "Learn my writing style and build a reply style guide"
+
+1. The AI calls `learn_reply_style({ maxCount: 40 })`, which pulls mail actually sent by the user.
+2. It analyzes greeting/closing/signature/tone patterns and any recurring reply types.
+3. Based on that analysis, it writes a new `config/reply_style.md`.
+4. From then on, `create_reply` / `save_draft` follow that file to write replies in the user's
+   actual voice.
+
 #### Example flow: "Organize my mail"
 
 1. User: "Organize the mail I got today."
@@ -680,14 +688,6 @@ comes back, the connection is working.
 4. It writes the rest of the body, then calls `save_draft({ mode: "update", draftEntryId, bodyHtml })`
    to overwrite that same draft instead of creating a new one.
 5. The user reviews it in the Drafts folder and sends it themselves.
-
-#### Example flow: initial setup, "Learn my writing style and build a reply style guide"
-
-1. The AI calls `learn_reply_style({ maxCount: 40 })`, which pulls mail actually sent by the user.
-2. It analyzes greeting/closing/signature/tone patterns and any recurring reply types.
-3. Based on that analysis, it writes a new `config/reply_style.md`.
-4. From then on, `create_reply` / `save_draft` follow that file to write replies in the user's
-   actual voice.
 
 ### Project structure
 
